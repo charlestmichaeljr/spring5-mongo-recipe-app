@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * Created by jt on 6/28/17.
  */
@@ -64,7 +66,9 @@ public class IngredientController {
         //init uom
         ingredientCommand.setUom(new UnitOfMeasureCommand());
 
-        model.addAttribute("uomList",  unitOfMeasureService.listAllUoms().collectList().block());
+        List<UnitOfMeasureCommand> uoms = unitOfMeasureService.listAllUoms().collectList().block();
+
+        model.addAttribute("uomList",  uoms);
 
         return "recipe/ingredient/ingredientform";
     }
@@ -74,7 +78,8 @@ public class IngredientController {
                                          @PathVariable String id, Model model){
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id).block());
 
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        List<UnitOfMeasureCommand> uoms = unitOfMeasureService.listAllUoms().collectList().block();
+        model.addAttribute("uomList", uoms);
         return "recipe/ingredient/ingredientform";
     }
 
